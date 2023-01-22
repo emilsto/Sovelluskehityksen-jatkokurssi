@@ -36,27 +36,8 @@ export default function App() {
     }, [city]);
 
   return (
-    <View
-    style={[
-      styles.container,
-      {
-        // Try setting `flexDirection` to `"row"`.
-        flexDirection: 'column',
-      },
-    ]}>
-      <StatusBar style="auto" />
-      <View style={{flex: 1, backgroundColor: 'grey' }}>
-      <WeatherSearch onCityChange={(newCity) => setCity(newCity)} />
-      </View>
+    <View>
 
-      <View style={{flex: 3, backgroundColor: 'white'}}>
-        <WeatherView weather={weather}/>
-      </View>
-      
-      <View style={{flex: 2, backgroundColor: 'grey'}} />
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Button title="Update" onPress={clickHandler}/>
-      </View>
     </View>
   );
 }

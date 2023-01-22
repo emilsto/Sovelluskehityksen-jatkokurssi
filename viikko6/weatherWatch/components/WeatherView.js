@@ -1,13 +1,8 @@
 //Weather view component
-
-import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 
-const WeatherView = ({weather}) => {
-    let placeHolder = "//cdn.weatherapi.com/weather/64x64/night/113.png"
-        
+const WeatherView = ({weather}) => {        
     //weather.location.icon
-
     return (
         <View style={styles.container}>
             <View style={styles.columnContainer}>
