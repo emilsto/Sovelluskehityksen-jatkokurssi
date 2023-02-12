@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -48,6 +50,45 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  double temperature = 0.0;
+  int humidity = 0;
+  double windSpeed = 0.0;
+  String city = "Hello";
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the `_fetchWeatherData` method when the component is initialized
+    _fetchWeatherData();
+  }
+
+  // Method to fetch weather data from an API
+  _fetchWeatherData() async {
+    final response = await http.get(
+      Uri.parse('https://weatherapi-com.p.rapidapi.com/forecast.json')
+          .replace(queryParameters: {
+        'q': 'Helsinki',
+        'days': '3',
+      }),
+      headers: {
+        'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com',
+        'X-RapidAPI-Key': 'ac04bf2660msh8787e6ecda958ddp19a5d4jsn923efe2a39f9',
+      },
+    );
+    if (response.statusCode == 200) {
+      final weatherData = json.decode(response.body);
+      setState(() {
+        temperature = weatherData['current']['temp_c'];
+        humidity = weatherData['current']['humidity'];
+        windSpeed = weatherData['current']['wind_kph'];
+        city = weatherData['location']['name'];
+      });
+    } else {
+      print(response.statusCode);
+      throw Exception('Failed to load weather data');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -66,21 +107,21 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            const Text(
-              'Current weather',
+            Text(
+              'Current weather in $city',
             ),
-            const Text(
-              'Temperature: 20.0',
+            Text(
+              'Temperature: $temperature',
             ),
-            const Text(
-              'Humidity: 50.0',
+            Text(
+              'Humidity: $humidity',
             ),
-            const Text(
-              'Wind speed: 5.0',
+            Text(
+              'Wind speed: $windSpeed',
             ),
             ElevatedButton(
                 child: const Text("Hae säätiedot"),
-                onPressed: () => print("Hae säätiedot painettu")),
+                onPressed: () => _fetchWeatherData()),
           ],
         ),
       ), // This trailing comma makes auto-formatting nicer for build methods.
